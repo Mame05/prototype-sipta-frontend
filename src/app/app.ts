@@ -1,12 +1,32 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ProductService } from './services/product.service';
+import { Product } from './models/product';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('prototype-sipta-frontend');
+export class App implements OnInit{
+   products: Product[] = [];
+
+  constructor(
+    private productService: ProductService
+  ) {}
+
+  ngOnInit(): void {
+    this.productService.getProducts().subscribe({
+      next: (data) => {
+        this.products = data;
+        console.log('Produits reçus :', data);
+      },
+      error: (error) => {
+        console.error('Erreur API :', error);
+      }
+    });
+  }
 }

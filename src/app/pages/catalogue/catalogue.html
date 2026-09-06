@@ -1,0 +1,133 @@
+<div class="catalogue">
+
+  <div class="catalogue-header">
+
+    <div>
+      <span class="subtitle">BOUTIQUE AGRICOLE</span>
+      <h1>Nos produits</h1>
+      <p>
+        Découvrez nos engrais, semences certifiées
+        et produits agricoles.
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- Recherche et filtre -->
+
+  <div class="filters">
+
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Rechercher un produit..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+      />
+    </div>
+
+    <select
+      [(ngModel)]="selectedCategory"
+      (change)="onCategoryChange()"
+    >
+      <option value="">Toutes les catégories</option>
+
+      <option value="Engrais">
+        Engrais
+      </option>
+
+      <option value="Semences certifiées">
+        Semences certifiées
+      </option>
+
+      <option value="Produits agricoles">
+        Produits agricoles
+      </option>
+    </select>
+
+  </div>
+
+
+  <!-- Produits -->
+
+  <div class="products-grid">
+
+    @for (product of filteredProducts; track product.id) {
+
+      <article class="product-card">
+
+        <div class="product-image">
+
+          <img
+            [src]="'assets/images/products/' + product.image"
+            [alt]="product.nom"
+          />
+
+          @if (product.stock === 0) {
+            <span class="stock-badge out">
+              Rupture de stock
+            </span>
+          }
+
+        </div>
+
+
+        <div class="product-content">
+
+          <span class="category">
+            {{ product.category.nom }}
+          </span>
+
+          <h2>
+            {{ product.nom }}
+          </h2>
+
+          <p class="description">
+            {{ product.description }}
+          </p>
+
+          <div class="product-bottom">
+
+            <strong>
+              {{ product.prix | number:'1.0-0' }} FCFA
+            </strong>
+
+            <span class="stock">
+              Stock : {{ product.stock }}
+            </span>
+
+          </div>
+
+          <button
+  type="button"
+  [disabled]="!product.disponible || product.stock === 0"
+  (click)="addToCart(product)"
+>
+  Ajouter au panier
+</button>
+
+        </div>
+
+      </article>
+
+    }
+
+  </div>
+
+
+  @if (filteredProducts.length === 0) {
+
+    <div class="empty">
+
+      <h3>Aucun produit trouvé</h3>
+
+      <p>
+        Essayez une autre recherche ou une autre catégorie.
+      </p>
+
+    </div>
+
+  }
+
+</div>
