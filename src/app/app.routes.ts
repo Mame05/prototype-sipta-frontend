@@ -22,6 +22,13 @@ export const routes: Routes = [
       .then(m => m.Commande)
 },
 
+{
+  path: 'confirmation/:id',
+  loadComponent: () =>
+    import('./pages/confirmation/confirmation')
+      .then(m => m.Confirmation)
+},
+
   {
     path: '',
     redirectTo: 'catalogue',

@@ -1,0 +1,145 @@
+<div class="confirmation-page">
+
+  @if (loading) {
+
+    <div class="loading">
+      <p>Chargement de votre commande...</p>
+    </div>
+
+  } @else {
+
+    @if (errorMessage) {
+
+      <div class="error-box">
+
+        <h1>Une erreur est survenue</h1> 
+
+        <p>
+          {{ errorMessage }}
+        </p>
+
+        <a routerLink="/catalogue">
+          Retour au catalogue
+        </a>
+
+      </div>
+
+    } @else {
+
+      <div class="confirmation-card">
+
+        <div class="success-icon">
+          ✓
+        </div>
+
+        <span class="subtitle">
+          COMMANDE CONFIRMÉE
+        </span>
+
+        <h1>Merci pour votre commande !</h1>
+
+        <p class="message">
+          Votre commande a bien été enregistrée.
+        </p>
+
+        <div class="order-number">
+
+          <span>
+            Numéro de commande
+          </span>
+
+          <strong>
+            #{{ order?.id }}
+          </strong>
+
+        </div>
+
+        <div class="order-info">
+
+          <div>
+            <span>Client</span>
+            <strong>{{ order?.nomClient }}</strong>
+          </div>
+
+          <div>
+            <span>Téléphone</span>
+            <strong>{{ order?.telephone }}</strong>
+          </div>
+
+          <div>
+            <span>Email</span>
+            <strong>{{ order?.email }}</strong>
+          </div>
+
+          <div>
+            <span>Adresse</span>
+            <strong>{{ order?.adresse }}</strong>
+          </div>
+
+          <div>
+            <span>Statut</span>
+            <strong>{{ order?.statut }}</strong>
+          </div>
+
+        </div>
+
+        <div class="products">
+
+          <h2>Récapitulatif</h2>
+
+          @for (item of order?.items ?? []; track item.id) {
+
+            <div class="product-row">
+
+              <div>
+
+                <strong>
+                  {{ item.product?.nom || 'Produit' }}
+                </strong>
+
+                <span>
+                  Quantité : {{ item.quantity }}
+                </span>
+
+              </div>
+
+              <strong>
+                {{ item.sousTotal | number:'1.0-0' }} FCFA
+              </strong>
+
+            </div>
+
+          }
+
+        </div>
+
+        <div class="total">
+
+          <span>
+            Total
+          </span>
+
+          <strong>
+            {{ order?.total | number:'1.0-0' }} FCFA
+          </strong>
+
+        </div>
+
+        <div class="actions">
+
+          <a
+            routerLink="/catalogue"
+            class="catalogue-button"
+          >
+            Retour au catalogue
+          </a>
+
+        </div>
+
+      </div>
+
+    }
+
+  }
+
+</div>
