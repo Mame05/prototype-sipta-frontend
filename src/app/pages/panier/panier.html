@@ -1,0 +1,170 @@
+<div class="cart-page">
+
+  <div class="cart-header">
+    <span class="subtitle">MON PANIER</span>
+
+    <h1>Votre panier</h1>
+
+    <p>
+      Retrouvez les produits que vous souhaitez commander.
+    </p>
+  </div>
+
+
+  @if (items.length === 0) {
+
+    <div class="empty-cart">
+
+      <div class="empty-icon">
+        🛒
+      </div>
+
+      <h2>Votre panier est vide</h2>
+
+      <p>
+        Ajoutez des produits depuis notre catalogue.
+      </p>
+
+      <a routerLink="/catalogue">
+        Voir le catalogue
+      </a>
+
+    </div>
+
+  } @else {
+
+    <div class="cart-content">
+
+      <div class="cart-items">
+
+        @for (item of items; track item.product.id) {
+
+          <div class="cart-item">
+
+            <div class="item-image">
+
+              <img
+                [src]="'assets/images/products/' + item.product.image"
+                [alt]="item.product.nom"
+              >
+
+            </div>
+
+
+            <div class="item-info">
+
+              <span class="category">
+                {{ item.product.category.nom }}
+              </span>
+
+              <h2>
+                {{ item.product.nom }}
+              </h2>
+
+              <p>
+                {{ item.product.prix | number:'1.0-0' }} FCFA
+              </p>
+
+            </div>
+
+
+            <div class="quantity">
+
+              <button
+                type="button"
+                (click)="decreaseQuantity(item.product.id)"
+              >
+                −
+              </button>
+
+              <span>
+                {{ item.quantity }}
+              </span>
+
+              <button
+                type="button"
+                (click)="increaseQuantity(item.product.id)"
+                [disabled]="item.quantity >= item.product.stock"
+              >
+                +
+              </button>
+
+            </div>
+
+
+            <strong class="subtotal">
+              {{
+                item.product.prix * item.quantity
+                | number:'1.0-0'
+              }}
+              FCFA
+            </strong>
+
+
+            <button
+              type="button"
+              class="remove"
+              (click)="removeItem(item.product.id)"
+            >
+              Supprimer
+            </button>
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <aside class="cart-summary">
+
+        <h2>Résumé</h2>
+
+        <div class="summary-line">
+
+          <span>
+            Articles
+          </span>
+
+          <span>
+            {{ items.length }}
+          </span>
+
+        </div>
+
+        <div class="summary-total">
+
+          <span>
+            Total
+          </span>
+
+          <strong>
+            {{ total | number:'1.0-0' }} FCFA
+          </strong>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="checkout"
+        >
+          Passer la commande
+        </button>
+
+
+        <button
+          type="button"
+          class="clear"
+          (click)="clearCart()"
+        >
+          Vider le panier
+        </button>
+
+      </aside>
+
+    </div>
+
+  }
+
+</div>

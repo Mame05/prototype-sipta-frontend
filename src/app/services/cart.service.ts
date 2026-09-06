@@ -11,7 +11,32 @@ export interface CartItem {
 })
 export class CartService {
 
+  private storageKey = 'sipta_cart';
+
   private items: CartItem[] = [];
+
+  constructor() {
+    this.loadCart();
+  }
+
+  private loadCart(): void {
+
+    const storedCart = localStorage.getItem(this.storageKey);
+
+    if (storedCart) {
+      this.items = JSON.parse(storedCart);
+    }
+
+  }
+
+  private saveCart(): void {
+
+    localStorage.setItem(
+      this.storageKey,
+      JSON.stringify(this.items)
+    );
+
+  }
 
   getItems(): CartItem[] {
     return this.items;
@@ -37,6 +62,8 @@ export class CartService {
       });
 
     }
+
+    this.saveCart();
   }
 
   increaseQuantity(productId: number): void {
@@ -47,6 +74,7 @@ export class CartService {
 
     if (item && item.quantity < item.product.stock) {
       item.quantity++;
+      this.saveCart();
     }
   }
 
@@ -61,10 +89,18 @@ export class CartService {
     }
 
     if (item.quantity > 1) {
+
       item.quantity--;
+
     } else {
-      this.removeFromCart(productId);
+
+      this.items = this.items.filter(
+        item => item.product.id !== productId
+      );
+
     }
+
+    this.saveCart();
   }
 
   removeFromCart(productId: number): void {
@@ -72,6 +108,8 @@ export class CartService {
     this.items = this.items.filter(
       item => item.product.id !== productId
     );
+
+    this.saveCart();
   }
 
   getTotal(): number {
@@ -81,6 +119,7 @@ export class CartService {
         total + item.product.prix * item.quantity,
       0
     );
+
   }
 
   getItemCount(): number {
@@ -89,9 +128,13 @@ export class CartService {
       (count, item) => count + item.quantity,
       0
     );
+
   }
 
   clearCart(): void {
+
     this.items = [];
+
+    localStorage.removeItem(this.storageKey);
   }
 }

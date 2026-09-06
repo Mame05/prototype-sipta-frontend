@@ -8,6 +8,13 @@ export const routes: Routes = [
         .then(m => m.Catalogue)
   },
 
+   {
+    path: 'panier',
+    loadComponent: () =>
+      import('./pages/panier/panier')
+        .then(m => m.Panier)
+  },
+
   {
     path: '',
     redirectTo: 'catalogue',

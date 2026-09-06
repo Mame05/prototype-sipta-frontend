@@ -66,10 +66,12 @@ export class Catalogue {
   addToCart(product: Product): void {
   this.cartService.addToCart(product);
 
-  console.log(
-    'Produit ajouté au panier :',
-    product.nom
-  );
+  console.log('==============================');
+  console.log('PRODUIT AJOUTÉ :', product.nom);
+  console.log('CONTENU DU PANIER :', this.cartService.getItems());
+  console.log('NOMBRE :', this.cartService.getItemCount());
+  console.log('TOTAL :', this.cartService.getTotal());
+  console.log('==============================');
 
   console.log(
     'Nombre d’articles :',
