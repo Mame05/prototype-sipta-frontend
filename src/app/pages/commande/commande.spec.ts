@@ -1,0 +1,22 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { Commande } from './commande';
+
+describe('Commande', () => {
+  let component: Commande;
+  let fixture: ComponentFixture<Commande>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Commande],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(Commande);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

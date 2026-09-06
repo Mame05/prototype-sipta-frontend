@@ -1,0 +1,146 @@
+<div class="order-page">
+
+  <div class="order-header">
+
+    <span class="subtitle">COMMANDE</span>
+
+    <h1>Passer la commande</h1>
+
+    <p>
+      Renseignez vos informations pour finaliser votre commande.
+    </p>
+
+  </div>
+
+
+  <div class="order-container">
+
+    <form
+      [formGroup]="commandeForm"
+      (ngSubmit)="submitOrder()"
+      class="order-form"
+    >
+
+      <div class="form-group">
+
+        <label for="nomClient">
+          Nom complet
+        </label>
+
+        <input
+          id="nomClient"
+          type="text"
+          formControlName="nomClient"
+          placeholder="Ex : Awa Diop"
+        >
+
+        @if (
+          commandeForm.get('nomClient')?.touched &&
+          commandeForm.get('nomClient')?.invalid
+        ) {
+          <small>
+            Veuillez saisir votre nom complet.
+          </small>
+        }
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="telephone">
+          Téléphone
+        </label>
+
+        <input
+          id="telephone"
+          type="tel"
+          formControlName="telephone"
+          placeholder="Ex : 771234567"
+        >
+
+        @if (
+          commandeForm.get('telephone')?.touched &&
+          commandeForm.get('telephone')?.invalid
+        ) {
+          <small>
+            Entrez un numéro de téléphone valide.
+          </small>
+        }
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="email">
+          Adresse email
+        </label>
+
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Ex : awa@email.com"
+        >
+
+        @if (
+          commandeForm.get('email')?.touched &&
+          commandeForm.get('email')?.invalid
+        ) {
+          <small>
+            Veuillez saisir une adresse email valide.
+          </small>
+        }
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="adresse">
+          Adresse de livraison
+        </label>
+
+        <textarea
+          id="adresse"
+          formControlName="adresse"
+          rows="4"
+          placeholder="Ex : Dakar, Parcelles Assainies..."
+        ></textarea>
+
+        @if (
+          commandeForm.get('adresse')?.touched &&
+          commandeForm.get('adresse')?.invalid
+        ) {
+          <small>
+            Veuillez saisir votre adresse de livraison.
+          </small>
+        }
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <a
+          routerLink="/panier"
+          class="back-button"
+        >
+          Retour au panier
+        </a>
+
+        <button
+          type="submit"
+          class="submit-button"
+        >
+          Confirmer la commande
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

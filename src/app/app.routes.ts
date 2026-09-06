@@ -16,6 +16,13 @@ export const routes: Routes = [
   },
 
   {
+  path: 'commande',
+  loadComponent: () =>
+    import('./pages/commande/commande')
+      .then(m => m.Commande)
+},
+
+  {
     path: '',
     redirectTo: 'catalogue',
     pathMatch: 'full'
