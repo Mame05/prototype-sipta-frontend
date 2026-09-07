@@ -1,0 +1,217 @@
+.order-page {
+  min-height: 100vh;
+  padding: 60px 20px;
+  background: #f7f8f5;
+  color: #222;
+}
+
+/* HEADER */
+
+.order-header {
+  max-width: 700px;
+  margin: 0 auto 45px;
+  text-align: center;
+}
+
+.subtitle {
+  display: block;
+  margin-bottom: 10px;
+  color: #2f7d32;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.order-header h1 {
+  margin: 0 0 15px;
+  font-size: 38px;
+}
+
+.order-header p {
+  color: #666;
+  line-height: 1.6;
+}
+
+
+/* CONTAINER */
+
+.order-container {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 40px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+
+/* FORM */
+
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 15px;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  background: #fff;
+  color: #222;
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #2f7d32;
+  box-shadow: 0 0 0 3px rgba(47, 125, 50, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+
+/* VALIDATION */
+
+.form-group small {
+  color: #c62828;
+  font-size: 13px;
+}
+
+
+/* ACTIONS */
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.back-button,
+.submit-button {
+  padding: 13px 22px;
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.back-button {
+  border: 1px solid #2f7d32;
+  background: white;
+  color: #2f7d32;
+}
+
+.back-button:hover {
+  background: #f0f7f0;
+}
+
+.submit-button {
+  border: none;
+  background: #2f7d32;
+  color: white;
+}
+
+.submit-button:hover:not(:disabled) {
+  background: #256628;
+  transform: translateY(-1px);
+}
+
+.submit-button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+
+/* ERROR */
+
+.error-message {
+  padding: 13px 15px;
+  border-radius: 8px;
+  background: #fdeaea;
+  color: #c62828;
+  font-size: 14px;
+}
+
+
+/* EMPTY CART */
+
+.empty-order {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 45px 30px;
+  background: white;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.empty-order h2 {
+  margin-bottom: 12px;
+}
+
+.empty-order p {
+  margin-bottom: 25px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.empty-order .back-button {
+  display: inline-block;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 650px) {
+
+  .order-page {
+    padding: 45px 15px;
+  }
+
+  .order-header h1 {
+    font-size: 30px;
+  }
+
+  .order-container {
+    padding: 25px 20px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .back-button,
+  .submit-button {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+}

@@ -36,9 +36,16 @@ export const routes: Routes = [
       .then(m => m.DetailProduit)
 },
 
-  {
-    path: '',
-    redirectTo: 'catalogue',
-    pathMatch: 'full'
-  }
+{
+  path: '',
+  loadComponent: () =>
+    import('./pages/accueil/accueil')
+      .then(m => m.Accueil)
+}
+
+ // {
+  //  path: '',
+  //  redirectTo: 'catalogue',
+  //  pathMatch: 'full'
+  //}
 ];

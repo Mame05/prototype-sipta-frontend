@@ -1,6 +1,6 @@
 <div class="confirmation-page">
 
-  @if (loading) {
+  @if (loading()) {
 
     <div class="loading">
       <p>Chargement de votre commande...</p>
@@ -8,14 +8,14 @@
 
   } @else {
 
-    @if (errorMessage) {
+    @if (errorMessage()) {
 
       <div class="error-box">
 
-        <h1>Une erreur est survenue</h1>  
+        <h1>Une erreur est survenue</h1>
 
         <p>
-          {{ errorMessage }}
+          {{ errorMessage() }}
         </p>
 
         <a routerLink="/catalogue">
@@ -36,7 +36,9 @@
           COMMANDE CONFIRMÉE
         </span>
 
-        <h1>Merci pour votre commande !</h1>
+        <h1>
+          Merci pour votre commande !
+        </h1>
 
         <p class="message">
           Votre commande a bien été enregistrée.
@@ -49,7 +51,7 @@
           </span>
 
           <strong>
-            #{{ order?.id }}
+            #{{ order()?.id }}
           </strong>
 
         </div>
@@ -58,27 +60,37 @@
 
           <div>
             <span>Client</span>
-            <strong>{{ order?.nomClient }}</strong>
+            <strong>
+              {{ order()?.nomClient }}
+            </strong>
           </div>
 
           <div>
             <span>Téléphone</span>
-            <strong>{{ order?.telephone }}</strong>
+            <strong>
+              {{ order()?.telephone }}
+            </strong>
           </div>
 
           <div>
             <span>Email</span>
-            <strong>{{ order?.email }}</strong>
+            <strong>
+              {{ order()?.email }}
+            </strong>
           </div>
 
           <div>
             <span>Adresse</span>
-            <strong>{{ order?.adresse }}</strong>
+            <strong>
+              {{ order()?.adresse }}
+            </strong>
           </div>
 
           <div>
             <span>Statut</span>
-            <strong>{{ order?.statut }}</strong>
+            <strong>
+              {{ order()?.statut }}
+            </strong>
           </div>
 
         </div>
@@ -87,7 +99,10 @@
 
           <h2>Récapitulatif</h2>
 
-          @for (item of order?.items ?? []; track item.id) {
+          @for (
+            item of order()?.items ?? [];
+            track item.id
+          ) {
 
             <div class="product-row">
 
@@ -120,7 +135,7 @@
           </span>
 
           <strong>
-            {{ order?.total | number:'1.0-0' }} FCFA
+            {{ order()?.total | number:'1.0-0' }} FCFA
           </strong>
 
         </div>
@@ -128,7 +143,7 @@
         <div class="actions">
 
           <a
-            routerLink="/catalogue"
+            [routerLink]="['/catalogue']"
             class="catalogue-button"
           >
             Retour au catalogue

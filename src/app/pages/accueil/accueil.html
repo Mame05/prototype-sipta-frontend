@@ -1,0 +1,250 @@
+<div class="home">
+    <p style="background: yellow; padding: 20px;">
+  TEST : {{ products().length }} produits
+</p>
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <span class="subtitle">
+        SIPTA • BOUTIQUE AGRICOLE
+      </span>
+
+      <h1>
+        Tout ce qu'il faut pour
+        <span>réussir vos cultures.</span>
+      </h1>
+
+      <p>
+        Découvrez nos engrais, semences certifiées
+        et produits agricoles sélectionnés pour
+        accompagner vos activités.
+      </p>
+
+      <div class="hero-actions">
+
+        <a
+          routerLink="/catalogue"
+          class="primary-button"
+        >
+          Découvrir nos produits
+        </a>
+
+        <a
+          routerLink="/panier"
+          class="secondary-button"
+        >
+          Voir mon panier
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CATÉGORIES -->
+  <section class="categories-section">
+
+    <div class="section-header">
+
+      <span class="subtitle">
+        NOS CATÉGORIES
+      </span>
+
+      <h2>
+        Découvrez nos produits
+      </h2>
+
+      <p>
+        Des produits adaptés aux besoins
+        des agriculteurs.
+      </p>
+
+    </div>
+
+
+    @if (loadingCategories()) {
+
+      <p class="loading">
+        Chargement des catégories...
+      </p>
+
+    } @else {
+
+      <div class="categories-grid">
+
+        @for (category of categories(); track category.id) {
+
+          <div class="category-card">
+
+            <div class="category-icon">
+              🌱
+            </div>
+
+            <h3>
+              {{ category.nom }}
+            </h3>
+
+            <p>
+              {{ category.description }}
+            </p>
+
+            <a routerLink="/catalogue">
+              Voir les produits →
+            </a>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- PRODUITS -->
+  <section class="products-section">
+
+    <div class="section-header">
+
+      <span class="subtitle">
+        NOS PRODUITS
+      </span>
+
+      <h2>
+        Une sélection pour vos besoins agricoles
+      </h2>
+
+      <p>
+        Retrouvez une sélection de nos produits
+        disponibles actuellement.
+      </p>
+
+    </div>
+
+
+    @if (loadingProducts()) {
+
+      <p class="loading">
+        Chargement des produits...
+      </p>
+
+    } @else {
+
+      <div class="products-grid">
+
+        @for (product of products().slice(0, 6); track product.id) {
+
+          <article class="product-card">
+
+            <div class="product-image">
+
+              <img
+                [src]="'assets/images/products/' + product.image"
+                [alt]="product.nom" 
+                loading="lazy"
+              />
+
+              @if (product.stock === 0) {
+
+                <span class="stock-badge">
+                  Rupture de stock
+                </span>
+
+              }
+
+            </div>
+
+
+            <div class="product-content">
+
+              <span class="category">
+                {{ product.category.nom }}
+              </span>
+
+              <h3>
+                {{ product.nom }}
+              </h3>
+
+              <p>
+                {{ product.description }}
+              </p>
+
+              <div class="product-footer">
+
+                <strong>
+                  {{ product.prix | number:'1.0-0' }} FCFA
+                </strong>
+
+                <a
+                  [routerLink]="['/produit', product.id]"
+                  class="detail-button"
+                >
+                  Voir le détail
+                </a>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+
+      <div class="catalogue-link">
+
+        <a
+          routerLink="/catalogue"
+          class="primary-button"
+        >
+          Voir tous les produits
+        </a>
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- CTA -->
+  <section class="cta">
+
+    <div>
+
+      <span class="subtitle">
+        SIPTA
+      </span>
+
+      <h2>
+        Prêt à trouver les produits
+        dont vous avez besoin ?
+      </h2>
+
+      <p>
+        Parcourez notre catalogue et passez
+        votre commande en quelques clics.
+      </p>
+
+      <a
+        routerLink="/catalogue"
+        class="primary-button"
+      >
+        Accéder au catalogue
+      </a>
+
+    </div>
+
+  </section>
+
+
+</div>

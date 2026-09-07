@@ -1,20 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { OrderResponse, OrderService } from '../../services/order.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+
+import {
+  OrderResponse,
+  OrderService
+} from '../../services/order.service';
 
 @Component({
   selector: 'app-confirmation',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [
+    CommonModule,
+    RouterLink
+  ],
   templateUrl: './confirmation.html',
-  styleUrl: './confirmation.css',
+  styleUrl: './confirmation.css'
 })
-export class Confirmation implements OnInit{
-  order: OrderResponse | null = null;
+export class Confirmation implements OnInit {
 
-  loading = true;
-  errorMessage = '';
+  order = signal<OrderResponse | null>(null);
+
+  loading = signal(true);
+  errorMessage = signal('');
 
   constructor(
     private route: ActivatedRoute,
@@ -23,40 +31,37 @@ export class Confirmation implements OnInit{
 
   ngOnInit(): void {
 
-console.log('1️⃣ Confirmation chargée');
-
     const orderId = Number(
       this.route.snapshot.paramMap.get('id')
     );
-    console.log('2️⃣ ID commande :', orderId);
 
     if (!orderId) {
-      this.errorMessage =
-        'Numéro de commande invalide.';
 
-      this.loading = false;
+      this.errorMessage.set(
+        'Numéro de commande invalide.'
+      );
+
+      this.loading.set(false);
 
       return;
     }
 
-    console.log('3️⃣ Appel API pour la commande :', orderId);
     this.loadOrder(orderId);
   }
 
   loadOrder(id: number): void {
-    console.log('4️⃣ loadOrder appelée avec ID :', id);
 
     this.orderService.getOrder(id).subscribe({
 
       next: (order) => {
-        console.log('5️⃣ Commande reçue :', order);
 
+        this.order.set(order);
+        this.loading.set(false);
 
-        this.order = order;
-        this.loading = false;
-
-        console.log('6️⃣ order =', this.order);
-        console.log('7️⃣ loading =', this.loading);
+        console.log(
+          'Commande chargée :',
+          order
+        );
 
       },
 
@@ -67,15 +72,13 @@ console.log('1️⃣ Confirmation chargée');
           error
         );
 
-        this.errorMessage =
-          'Impossible de récupérer les informations de la commande.';
+        this.errorMessage.set(
+          'Impossible de récupérer les informations de la commande.'
+        );
 
-        this.loading = false;
-
+        this.loading.set(false);
       }
 
     });
-
   }
-
 }

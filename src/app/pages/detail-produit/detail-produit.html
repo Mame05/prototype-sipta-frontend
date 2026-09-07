@@ -1,18 +1,20 @@
 <div class="detail-page">
 
-  @if (loading) {
+  @if (loading()) {
 
     <div class="loading">
       <p>Chargement du produit...</p>
     </div>
 
-  } @else if (errorMessage) {
+  } @else if (errorMessage()) {
 
     <div class="error-box">
 
       <h1>Produit introuvable</h1>
 
-      <p>{{ errorMessage }}</p>
+      <p>
+        {{ errorMessage() }}
+      </p>
 
       <a routerLink="/catalogue">
         Retour au catalogue
@@ -20,7 +22,7 @@
 
     </div>
 
-  } @else if (product) {
+  } @else if (product()) {
 
     <div class="detail-container">
 
@@ -33,45 +35,46 @@
 
       <div class="product-detail">
 
-        <!-- Image -->
         <div class="product-image">
 
           <img
-            [src]="'assets/images/products/' + product.image"
-            [alt]="product.nom"
+            [src]="'assets/images/products/' + product()!.image"
+            [alt]="product()!.nom"
           >
 
         </div>
 
-        <!-- Informations -->
         <div class="product-info">
 
           <span class="category">
-            {{ product.category.nom }}
+            {{ product()!.category.nom }}
           </span>
 
           <h1>
-            {{ product.nom }}
+            {{ product()!.nom }}
           </h1>
 
           <p class="description">
-            {{ product.description }}
+            {{ product()!.description }}
           </p>
 
           <div class="price">
-            {{ product.prix | number:'1.0-0' }} FCFA
+            {{ product()!.prix | number:'1.0-0' }} FCFA
           </div>
 
           <div class="availability">
 
-            @if (product.disponible && product.stock > 0) {
+            @if (
+              product()!.disponible &&
+              product()!.stock > 0
+            ) {
 
               <span class="available">
                 ✓ Disponible
               </span>
 
               <span class="stock">
-                {{ product.stock }} unité(s) en stock
+                {{ product()!.stock }} unité(s) en stock
               </span>
 
             } @else {
@@ -85,9 +88,13 @@
           </div>
 
           <button
+            type="button"
             class="add-button"
             (click)="addToCart()"
-            [disabled]="!product.disponible || product.stock <= 0"
+            [disabled]="
+              !product()!.disponible ||
+              product()!.stock <= 0
+            "
           >
             Ajouter au panier
           </button>

@@ -11,7 +11,7 @@
   </div>
 
 
-  @if (items.length === 0) {
+  @if (items().length === 0) {
 
     <div class="empty-cart">
 
@@ -37,7 +37,7 @@
 
       <div class="cart-items">
 
-        @for (item of items; track item.product.id) {
+        @for (item of items(); track item.product.id) {
 
           <div class="cart-item">
 
@@ -127,7 +127,7 @@
           </span>
 
           <span>
-            {{ items.length }}
+            {{ items().length }}
           </span>
 
         </div>
@@ -139,7 +139,7 @@
           </span>
 
           <strong>
-            {{ total | number:'1.0-0' }} FCFA
+            {{ total() | number:'1.0-0' }} FCFA
           </strong>
 
         </div>
@@ -148,6 +148,7 @@
         <button
           type="button"
           class="checkout"
+          routerLink="/commande"
         >
           Passer la commande
         </button>

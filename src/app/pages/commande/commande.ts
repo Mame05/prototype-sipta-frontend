@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -29,14 +29,13 @@ import {
 })
 export class Commande implements OnInit {
 
-  items: CartItem[] = [];
-  total = 0;
+  items = signal<CartItem[]>([]);
+  total = signal(0);
 
-  isSubmitting = false;
-  errorMessage = '';
+  isSubmitting = signal(false);
+  errorMessage = signal('');
 
   commandeForm: any;
-
 
   constructor(
     private fb: FormBuilder,
@@ -46,34 +45,38 @@ export class Commande implements OnInit {
   ) {
     this.commandeForm = this.fb.group({
 
-    nomClient: ['', [
-      Validators.required,
-      Validators.minLength(2)
-    ]],
+      nomClient: ['', [
+        Validators.required,
+        Validators.minLength(2)
+      ]],
 
-    telephone: ['', [
-      Validators.required,
-      Validators.pattern(/^[0-9]{9}$/)
-    ]],
+      telephone: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]{9}$/)
+      ]],
 
-    email: ['', [
-      Validators.required,
-      Validators.email
-    ]],
+      email: ['', [
+        Validators.required,
+        Validators.email
+      ]],
 
-    adresse: ['', [
-      Validators.required,
-      Validators.minLength(5)
-    ]]
+      adresse: ['', [
+        Validators.required,
+        Validators.minLength(5)
+      ]]
 
-  });
-
-}
+    });
+  }
 
   ngOnInit(): void {
 
-    this.items = this.cartService.getItems();
-    this.total = this.cartService.getTotal();
+    this.items.set(
+      this.cartService.getItems()
+    );
+
+    this.total.set(
+      this.cartService.getTotal()
+    );
 
   }
 
@@ -86,16 +89,17 @@ export class Commande implements OnInit {
       return;
     }
 
-    if (this.items.length === 0) {
+    if (this.items().length === 0) {
 
-      this.errorMessage =
-        'Votre panier est vide. Ajoutez au moins un produit.';
+      this.errorMessage.set(
+        'Votre panier est vide. Ajoutez au moins un produit.'
+      );
 
       return;
     }
 
-    this.isSubmitting = true;
-    this.errorMessage = '';
+    this.isSubmitting.set(true);
+    this.errorMessage.set('');
 
     const order = {
 
@@ -104,16 +108,17 @@ export class Commande implements OnInit {
       email: this.commandeForm.value.email!,
       adresse: this.commandeForm.value.adresse!,
 
-      items: this.items.map(item => ({
-
+      items: this.items().map(item => ({
         productId: item.product.id,
         quantity: item.quantity
-
       }))
 
     };
 
-    console.log('Commande envoyée :', order);
+    console.log(
+      'Commande envoyée :',
+      order
+    );
 
     this.orderService.createOrder(order).subscribe({
 
@@ -126,7 +131,7 @@ export class Commande implements OnInit {
 
         this.cartService.clearCart();
 
-        this.isSubmitting = false;
+        this.isSubmitting.set(false);
 
         this.router.navigate([
           '/confirmation',
@@ -142,16 +147,15 @@ export class Commande implements OnInit {
           error
         );
 
-        this.isSubmitting = false;
+        this.isSubmitting.set(false);
 
-        this.errorMessage =
+        this.errorMessage.set(
           error?.error?.message ||
-          'Une erreur est survenue lors de la commande.';
+          'Une erreur est survenue lors de la commande.'
+        );
 
       }
 
     });
-
   }
-
 }
