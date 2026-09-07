@@ -15,7 +15,46 @@ export class CategoryService {
     private http: HttpClient
   ) {}
 
+  // Récupérer toutes les catégories
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.apiUrl);
+    return this.http.get<Category[]>(
+      this.apiUrl
+    );
+  }
+
+  // Ajouter une catégorie
+  createCategory(
+    category: {
+      nom: string;
+      description?: string;
+    }
+  ): Observable<Category> {
+    return this.http.post<Category>(
+      this.apiUrl,
+      category
+    );
+  }
+
+  // Modifier une catégorie
+  updateCategory(
+    id: number,
+    category: {
+      nom: string;
+      description?: string;
+    }
+  ): Observable<Category> {
+    return this.http.patch<Category>(
+      `${this.apiUrl}/${id}`,
+      category
+    );
+  }
+
+  // Supprimer une catégorie
+  deleteCategory(
+    id: number
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${id}`
+    );
   }
 }

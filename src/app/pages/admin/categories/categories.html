@@ -1,1 +1,259 @@
-<p>categories works!</p>
+<div class="categories-page">
+
+  <!-- EN-TÊTE -->
+  <div class="page-header">
+
+    <div>
+      <span class="subtitle">GESTION</span>
+
+      <h2>Catégories</h2>
+
+      <p>
+        Gérez les catégories de votre boutique agricole.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="add-button"
+      (click)="openAdd()"
+    >
+      + Ajouter une catégorie
+    </button>
+
+  </div>
+
+
+  <!-- MESSAGES -->
+
+  @if (successMessage()) {
+
+    <div class="success-message">
+      {{ successMessage() }}
+    </div>
+
+  }
+
+  @if (errorMessage()) {
+
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+
+  }
+
+
+  <!-- FORMULAIRE -->
+
+  @if (showForm()) {
+
+    <div class="form-card">
+
+      <div class="form-header">
+
+        <h3>
+          @if (isEdit()) {
+            Modifier la catégorie
+          } @else {
+            Ajouter une catégorie
+          }
+        </h3>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeForm()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <form
+        [formGroup]="categoryForm"
+        (ngSubmit)="saveCategory()"
+      >
+
+        <!-- NOM -->
+
+        <div class="form-group">
+
+          <label for="nom">
+            Nom de la catégorie
+          </label>
+
+          <input
+            id="nom"
+            type="text"
+            formControlName="nom"
+            placeholder="Ex : Engrais"
+          />
+
+          @if (
+            categoryForm.get('nom')?.invalid &&
+            categoryForm.get('nom')?.touched
+          ) {
+
+            <small>
+              Le nom est obligatoire et doit contenir
+              au moins 2 caractères.
+            </small>
+
+          }
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="form-group">
+
+          <label for="description">
+            Description
+          </label>
+
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="4"
+            placeholder="Description de la catégorie"
+          ></textarea>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="closeForm()"
+          >
+            Annuler
+          </button>
+
+          <button
+            type="submit"
+            class="save-button"
+          >
+            @if (isEdit()) {
+              Modifier
+            } @else {
+              Ajouter
+            }
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  }
+
+
+  <!-- LISTE -->
+
+  <section class="categories-section">
+
+    <div class="section-title">
+
+      <h3>
+        Liste des catégories
+      </h3>
+
+      <span>
+        {{ categories().length }} catégorie(s)
+      </span>
+
+    </div>
+
+
+    @if (loading()) {
+
+      <div class="loading">
+        Chargement des catégories...
+      </div>
+
+    } @else {
+
+      @if (categories().length === 0) {
+
+        <div class="empty">
+          <p>
+            Aucune catégorie enregistrée.
+          </p>
+
+          <button
+            type="button"
+            class="add-button"
+            (click)="openAdd()"
+          >
+            Ajouter une catégorie
+          </button>
+        </div>
+
+      } @else {
+
+        <div class="categories-grid">
+
+          @for (
+            category of categories();
+            track category.id
+          ) {
+
+            <article class="category-card">
+
+              <div class="category-icon">
+                🌱
+              </div>
+
+              <div class="category-content">
+
+                <h3>
+                  {{ category.nom }}
+                </h3>
+
+                <p>
+                  {{ category.description || 'Aucune description.' }}
+                </p>
+
+              </div>
+
+
+              <div class="category-actions">
+
+                <button
+                  type="button"
+                  class="edit-button"
+                  (click)="openEdit(category)"
+                >
+                  Modifier
+                </button>
+
+                <button
+                  type="button"
+                  class="delete-button"
+                  (click)="deleteCategory(category)"
+                >
+                  Supprimer
+                </button>
+
+              </div>
+
+            </article>
+
+          }
+
+        </div>
+
+      }
+
+    }
+
+  </section>
+
+</div>
