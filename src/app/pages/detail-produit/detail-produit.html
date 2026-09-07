@@ -1,0 +1,103 @@
+<div class="detail-page">
+
+  @if (loading) {
+
+    <div class="loading">
+      <p>Chargement du produit...</p>
+    </div>
+
+  } @else if (errorMessage) {
+
+    <div class="error-box">
+
+      <h1>Produit introuvable</h1>
+
+      <p>{{ errorMessage }}</p>
+
+      <a routerLink="/catalogue">
+        Retour au catalogue
+      </a>
+
+    </div>
+
+  } @else if (product) {
+
+    <div class="detail-container">
+
+      <a
+        routerLink="/catalogue"
+        class="back-link"
+      >
+        ← Retour au catalogue
+      </a>
+
+      <div class="product-detail">
+
+        <!-- Image -->
+        <div class="product-image">
+
+          <img
+            [src]="'assets/images/products/' + product.image"
+            [alt]="product.nom"
+          >
+
+        </div>
+
+        <!-- Informations -->
+        <div class="product-info">
+
+          <span class="category">
+            {{ product.category.nom }}
+          </span>
+
+          <h1>
+            {{ product.nom }}
+          </h1>
+
+          <p class="description">
+            {{ product.description }}
+          </p>
+
+          <div class="price">
+            {{ product.prix | number:'1.0-0' }} FCFA
+          </div>
+
+          <div class="availability">
+
+            @if (product.disponible && product.stock > 0) {
+
+              <span class="available">
+                ✓ Disponible
+              </span>
+
+              <span class="stock">
+                {{ product.stock }} unité(s) en stock
+              </span>
+
+            } @else {
+
+              <span class="unavailable">
+                ✕ Produit indisponible
+              </span>
+
+            }
+
+          </div>
+
+          <button
+            class="add-button"
+            (click)="addToCart()"
+            [disabled]="!product.disponible || product.stock <= 0"
+          >
+            Ajouter au panier
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

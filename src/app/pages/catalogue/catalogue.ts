@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../../services/product.service';
-import { Product } from '../../models/product';
+import { Category, Product } from '../../models/product';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-catalogue',
@@ -14,18 +15,41 @@ import { CartService } from '../../services/cart.service';
 export class Catalogue {
   products: Product[] = [];
   filteredProducts: Product[] = [];
+  categories: Category[] = [];
 
   searchTerm = '';
   selectedCategory = '';
 
   constructor(
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
     this.loadProducts();
+     this.loadCategories();
   }
+
+  loadCategories(): void {
+
+  this.categoryService.getCategories().subscribe({
+
+    next: (data) => {
+      this.categories = data;
+
+      console.log('Catégories reçues :', data);
+    },
+
+    error: (error) => {
+      console.error(
+        'Erreur lors du chargement des catégories :',
+        error
+      );
+    }
+
+  });
+}
 
   loadProducts(): void {
     this.productService.getProducts().subscribe({
@@ -49,7 +73,7 @@ export class Catalogue {
 
       const matchesCategory =
         !this.selectedCategory ||
-        product.category?.nom === this.selectedCategory;
+        product.category.nom === this.selectedCategory;
 
       return matchesSearch && matchesCategory;
     });
@@ -66,22 +90,6 @@ export class Catalogue {
   addToCart(product: Product): void {
   this.cartService.addToCart(product);
 
-  console.log('==============================');
   console.log('PRODUIT AJOUTÉ :', product.nom);
-  console.log('CONTENU DU PANIER :', this.cartService.getItems());
-  console.log('NOMBRE :', this.cartService.getItemCount());
-  console.log('TOTAL :', this.cartService.getTotal());
-  console.log('==============================');
-
-  console.log(
-    'Nombre d’articles :',
-    this.cartService.getItemCount()
-  );
-
-  console.log(
-    'Total :',
-    this.cartService.getTotal(),
-    'FCFA'
-  );
 }
 }

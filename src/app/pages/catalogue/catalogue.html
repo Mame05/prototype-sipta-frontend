@@ -28,23 +28,22 @@
     </div>
 
     <select
-      [(ngModel)]="selectedCategory"
-      (change)="onCategoryChange()"
-    >
-      <option value="">Toutes les catégories</option>
+  [(ngModel)]="selectedCategory"
+  (change)="onCategoryChange()"
+>
+  <option value="">
+    Toutes les catégories
+  </option>
 
-      <option value="Engrais">
-        Engrais
-      </option>
+  @for (category of categories; track category.id) {
 
-      <option value="Semences certifiées">
-        Semences certifiées
-      </option>
+    <option [value]="category.nom">
+      {{ category.nom }}
+    </option>
 
-      <option value="Produits agricoles">
-        Produits agricoles
-      </option>
-    </select>
+  }
+
+</select>
 
   </div>
 
