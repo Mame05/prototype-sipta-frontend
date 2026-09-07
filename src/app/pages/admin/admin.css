@@ -1,0 +1,168 @@
+.admin-layout {
+  min-height: 100vh;
+  display: flex;
+  background: #f7f8f5;
+  color: #222;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #234f28;
+  color: white;
+}
+
+.sidebar-header {
+  padding: 30px 25px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.admin-label {
+  display: block;
+  margin-top: 7px;
+  color: #cbd8cc;
+  font-size: 13px;
+}
+
+/* NAVIGATION */
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 25px 15px;
+  gap: 6px;
+}
+
+.admin-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  border-radius: 9px;
+  color: #d9e3da;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.admin-nav a:hover,
+.admin-nav a.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+}
+
+.admin-nav span {
+  width: 22px;
+  text-align: center;
+}
+
+/* SIDEBAR FOOTER */
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 20px 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-footer a {
+  color: #d9e3da;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.sidebar-footer a:hover {
+  color: white;
+}
+
+/* CONTENU */
+
+.admin-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-topbar {
+  padding: 25px 35px;
+  background: white;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.admin-topbar h1 {
+  margin: 0 0 5px;
+  font-size: 25px;
+}
+
+.admin-topbar p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.admin-page {
+  padding: 35px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+
+  .sidebar {
+    width: 210px;
+  }
+
+  .admin-topbar {
+    padding: 22px;
+  }
+
+  .admin-page {
+    padding: 22px;
+  }
+}
+
+@media (max-width: 650px) {
+
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+  }
+
+  .sidebar-header {
+    padding: 20px;
+  }
+
+  .admin-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px;
+  }
+
+  .admin-nav a {
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .admin-topbar {
+    padding: 20px;
+  }
+
+  .admin-page {
+    padding: 20px 15px;
+  }
+}

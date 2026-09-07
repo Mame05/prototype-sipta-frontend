@@ -1,5 +1,5 @@
 import { Component, signal, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ProductService } from './services/product.service';
 import { Product } from './models/product';
 import { CommonModule } from '@angular/common';
@@ -17,7 +17,8 @@ export class App implements OnInit{
    products: Product[] = [];
 
   constructor(
-    private productService: ProductService
+    private productService: ProductService,
+     private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -30,5 +31,8 @@ export class App implements OnInit{
         console.error('Erreur API :', error);
       }
     });
+  }
+   isAdmin(): boolean {
+    return this.router.url.startsWith('/admin');
   }
 }

@@ -37,6 +37,39 @@ export const routes: Routes = [
 },
 
 {
+  path: 'admin',
+  loadComponent: () =>
+    import('./pages/admin/admin')
+      .then(m => m.Admin),
+  children: [
+    {
+      path: '',
+      loadComponent: () =>
+        import('./pages/admin/dashboard/dashboard')
+          .then(m => m.Dashboard)
+    },
+    {
+      path: 'categories',
+      loadComponent: () =>
+        import('./pages/admin/categories/categories')
+          .then(m => m.Categories)
+    },
+    {
+      path: 'produits',
+      loadComponent: () =>
+        import('./pages/admin/produits/produits')
+          .then(m => m.Produits)
+    },
+    {
+      path: 'commandes',
+      loadComponent: () =>
+        import('./pages/admin/commandes/commandes')
+          .then(m => m.Commandes)
+    }
+  ]
+},
+
+{
   path: '',
   loadComponent: () =>
     import('./pages/accueil/accueil')

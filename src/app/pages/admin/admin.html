@@ -1,1 +1,79 @@
-<p>admin works!</p>
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <div class="logo">
+        🌱 SIPTA
+      </div>
+
+      <span class="admin-label">
+        Administration
+      </span>
+    </div>
+
+    <nav class="admin-nav">
+
+      <a
+        routerLink="/admin"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span>📊</span>
+        Dashboard
+      </a>
+
+      <a
+        routerLink="/admin/categories"
+        routerLinkActive="active"
+      >
+        <span>📁</span>
+        Catégories
+      </a>
+
+      <a
+        routerLink="/admin/produits"
+        routerLinkActive="active"
+      >
+        <span>🌱</span>
+        Produits
+      </a>
+
+      <a
+        routerLink="/admin/commandes"
+        routerLinkActive="active"
+      >
+        <span>🛒</span>
+        Commandes
+      </a>
+
+    </nav>
+
+    <div class="sidebar-footer">
+
+      <a routerLink="/">
+        ← Retour à la boutique
+      </a>
+
+    </div>
+
+  </aside>
+
+  <!-- CONTENU -->
+  <main class="admin-content">
+
+    <header class="admin-topbar">
+      <div>
+        <h1>Administration SIPTA</h1>
+        <p>Gestion de votre boutique agricole</p>
+      </div>
+    </header>
+
+    <section class="admin-page">
+      <router-outlet />
+    </section>
+
+  </main>
+
+</div>

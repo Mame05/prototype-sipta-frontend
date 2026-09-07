@@ -1,7 +1,11 @@
-<app-header />
+@if (!isAdmin()) {
+  <app-header />
+}
 
 <main class="main-content">
   <router-outlet />
 </main>
 
-<app-footer />
+@if (!isAdmin()) {
+  <app-footer />
+}
