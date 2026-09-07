@@ -1,1 +1,135 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+
+  <!-- TITRE -->
+  <div class="page-header">
+    <div>
+      <span class="subtitle">TABLEAU DE BORD</span>
+      <h2>Vue d'ensemble</h2>
+      <p>
+        Consultez rapidement l'activité de votre boutique SIPTA.
+      </p>
+    </div>
+  </div>
+
+  @if (loading()) {
+
+    <div class="loading">
+      Chargement du tableau de bord...
+    </div>
+
+  } @else {
+
+    <!-- STATISTIQUES -->
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon">🌱</div>
+
+        <div>
+          <span>Produits</span>
+          <strong>{{ totalProducts }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📁</div>
+
+        <div>
+          <span>Catégories</span>
+          <strong>{{ totalCategories }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🛒</div>
+
+        <div>
+          <span>Commandes</span>
+          <strong>{{ totalOrders }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+
+        <div>
+          <span>Chiffre d'affaires</span>
+          <strong>
+            {{ totalSales | number:'1.0-0' }} FCFA
+          </strong>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COMMANDES RÉCENTES -->
+    <section class="recent-section">
+
+      <div class="section-header">
+        <div>
+          <span class="subtitle">ACTIVITÉ</span>
+          <h2>Commandes récentes</h2>
+        </div>
+      </div>
+
+      @if (recentOrders.length === 0) {
+
+        <div class="empty">
+          <p>Aucune commande pour le moment.</p>
+        </div>
+
+      } @else {
+
+        <div class="orders-table">
+
+          <div class="table-header">
+            <span>N°</span>
+            <span>Client</span>
+            <span>Total</span>
+            <span>Statut</span>
+            <span>Date</span>
+          </div>
+
+          @for (order of recentOrders; track order.id) {
+
+            <div class="table-row">
+
+              <strong>
+                #{{ order.id }}
+              </strong>
+
+              <span>
+                {{ order.nomClient }}
+              </span>
+
+              <strong>
+                {{ order.total | number:'1.0-0' }} FCFA
+              </strong>
+
+              <span
+                class="status"
+                [class.pending]="order.statut === 'en_attente'"
+                [class.confirmed]="order.statut === 'confirmee'"
+                [class.delivered]="order.statut === 'livree'"
+                [class.cancelled]="order.statut === 'annulee'"
+              >
+                {{ order.statut }}
+              </span>
+
+              <span>
+                {{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+</div>

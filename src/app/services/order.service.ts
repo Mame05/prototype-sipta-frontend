@@ -45,6 +45,12 @@ export class OrderService {
     );
   }
 
+  getOrders(): Observable<OrderResponse[]> {
+    return this.http.get<OrderResponse[]>(
+      this.apiUrl
+    );
+  }
+
   getOrder(id: number): Observable<OrderResponse> {
   return this.http.get<OrderResponse>(
     `${this.apiUrl}/${id}`
