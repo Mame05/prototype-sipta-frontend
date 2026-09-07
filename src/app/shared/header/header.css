@@ -1,0 +1,237 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: white;
+  border-bottom: 1px solid #e5e5e5;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.header-container {
+  max-width: 1200px;
+  height: 75px;
+  margin: 0 auto;
+  padding: 0 25px;
+
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+
+/* LOGO */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #234f28;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.logo-icon {
+  font-size: 25px;
+}
+
+.logo-text {
+  font-size: 23px;
+  letter-spacing: 1px;
+}
+
+
+/* NAVIGATION */
+
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+
+  margin-left: auto;
+}
+
+.desktop-nav a {
+  position: relative;
+
+  padding: 27px 0;
+
+  color: #444;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.desktop-nav a:hover,
+.desktop-nav a.active {
+  color: #2f7d32;
+}
+
+.desktop-nav a.active::after {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+
+  height: 2px;
+
+  background: #2f7d32;
+}
+
+
+/* PANIER */
+
+.cart-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 9px 13px;
+
+  border-radius: 9px;
+
+  color: #2f7d32;
+  text-decoration: none;
+
+  font-weight: 600;
+}
+
+.cart-link:hover {
+  background: #f0f7f0;
+}
+
+.cart-icon {
+  font-size: 20px;
+}
+
+.cart-count {
+  min-width: 21px;
+  height: 21px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 5px;
+
+  border-radius: 50%;
+
+  background: #2f7d32;
+  color: white;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* BURGER */
+
+.burger {
+  display: none;
+
+  width: 42px;
+  height: 42px;
+
+  padding: 8px;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.burger span {
+  display: block;
+
+  width: 25px;
+  height: 2px;
+
+  margin: 5px auto;
+
+  background: #234f28;
+}
+
+
+/* MOBILE MENU */
+
+.mobile-nav {
+  display: none;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+  .header-container {
+    height: 65px;
+    padding: 0 18px;
+    gap: 10px;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .cart-link {
+    margin-left: auto;
+  }
+
+  .cart-text {
+    display: none;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+
+    padding: 10px 20px 20px;
+
+    background: white;
+    border-top: 1px solid #eee;
+  }
+
+  .mobile-nav a {
+    padding: 15px 5px;
+
+    color: #333;
+    text-decoration: none;
+
+    font-weight: 600;
+
+    border-bottom: 1px solid #eee;
+  }
+
+  .mobile-nav a:hover,
+  .mobile-nav a.active {
+    color: #2f7d32;
+  }
+
+  .mobile-cart {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-cart span {
+    min-width: 22px;
+    height: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #2f7d32;
+    color: white;
+
+    font-size: 12px;
+  }
+}

@@ -276,36 +276,7 @@
   text-align: center;
 }
 
-/* =========================
-   CTA
-========================= */
 
-.cta {
-  padding: 80px 25px;
-  background: #234f28;
-  color: white;
-  text-align: center;
-}
-
-.cta > div {
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.cta .subtitle {
-  margin-bottom: 15px;
-}
-
-.cta h2 {
-  margin-bottom: 15px;
-  font-size: 36px;
-}
-
-.cta p {
-  margin-bottom: 30px;
-  color: #e4e4e4;
-  line-height: 1.6;
-}
 
 /* =========================
    LOADING
@@ -372,12 +343,5 @@
     height: auto;
   }
 
-  .cta {
-    padding: 60px 20px;
-  }
-
-  .cta h2 {
-    font-size: 28px;
-  }
 
 }

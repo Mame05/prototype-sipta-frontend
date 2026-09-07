@@ -3,11 +3,13 @@ import { RouterOutlet } from '@angular/router';
 import { ProductService } from './services/product.service';
 import { Product } from './models/product';
 import { CommonModule } from '@angular/common';
+import { Header } from './shared/header/header';
+import { Footer } from './shared/footer/footer';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, Header, Footer],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

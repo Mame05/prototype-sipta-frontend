@@ -1,0 +1,130 @@
+<header class="site-header">
+
+  <div class="header-container">
+
+    <!-- LOGO -->
+
+    <a
+      routerLink="/"
+      class="logo"
+      (click)="closeMenu()"
+    >
+      <span class="logo-icon">🌱</span>
+
+      <span class="logo-text">
+        SIPTA
+      </span>
+    </a>
+
+
+    <!-- NAVIGATION DESKTOP -->
+
+    <nav
+      class="desktop-nav"
+      aria-label="Navigation principale"
+    >
+
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        Accueil
+      </a>
+
+      <a
+        routerLink="/catalogue"
+        routerLinkActive="active"
+      >
+        Catalogue
+      </a>
+
+    </nav>
+
+
+    <!-- PANIER -->
+
+    <a
+      routerLink="/panier"
+      class="cart-link"
+      aria-label="Voir le panier"
+    >
+
+      <span class="cart-icon">
+        🛒
+      </span>
+
+      <span class="cart-text">
+        Panier
+      </span>
+
+      <span class="cart-count">
+        {{ cartService.itemCount() }}
+      </span>
+
+    </a>
+
+
+    <!-- BURGER -->
+
+    <button
+      type="button"
+      class="burger"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen"
+      aria-label="Ouvrir le menu"
+    >
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+    </button>
+
+  </div>
+
+
+  <!-- MENU MOBILE -->
+
+  @if (menuOpen) {
+
+    <nav
+      class="mobile-nav"
+      aria-label="Navigation mobile"
+    >
+
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMenu()"
+      >
+        Accueil
+      </a>
+
+      <a
+        routerLink="/catalogue"
+        routerLinkActive="active"
+        (click)="closeMenu()"
+      >
+        Catalogue
+      </a>
+
+      <a
+        routerLink="/panier"
+        routerLinkActive="active"
+        (click)="closeMenu()"
+        class="mobile-cart"
+      >
+        🛒 Panier
+
+        <span>
+          {{ cartService.itemCount() }}
+        </span>
+      </a>
+
+    </nav>
+
+  }
+
+</header>

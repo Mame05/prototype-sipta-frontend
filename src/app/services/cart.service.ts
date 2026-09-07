@@ -1,4 +1,9 @@
-import { Injectable } from '@angular/core';
+import {
+  Injectable,
+  computed,
+  signal
+} from '@angular/core';
+
 import { Product } from '../models/product';
 
 export interface CartItem {
@@ -11,76 +16,93 @@ export interface CartItem {
 })
 export class CartService {
 
-  private storageKey = 'sipta_cart';
+  private items = signal<CartItem[]>([]);
 
-  private items: CartItem[] = [];
+  readonly itemCount = computed(() =>
+    this.items().reduce(
+      (count, item) => count + item.quantity,
+      0
+    )
+  );
 
-  constructor() {
-    this.loadCart();
-  }
-
-  private loadCart(): void {
-
-    const storedCart = localStorage.getItem(this.storageKey);
-
-    if (storedCart) {
-      this.items = JSON.parse(storedCart);
-    }
-
-  }
-
-  private saveCart(): void {
-
-    localStorage.setItem(
-      this.storageKey,
-      JSON.stringify(this.items)
-    );
-
-  }
+  readonly total = computed(() =>
+    this.items().reduce(
+      (total, item) =>
+        total + item.product.prix * item.quantity,
+      0
+    )
+  );
 
   getItems(): CartItem[] {
-    return this.items;
+    return this.items();
   }
 
   addToCart(product: Product): void {
 
-    const existingItem = this.items.find(
+    const currentItems = this.items();
+
+    const existingItem = currentItems.find(
       item => item.product.id === product.id
     );
 
     if (existingItem) {
 
       if (existingItem.quantity < product.stock) {
-        existingItem.quantity++;
+
+        this.items.set(
+          currentItems.map(item =>
+            item.product.id === product.id
+              ? {
+                  ...item,
+                  quantity: item.quantity + 1
+                }
+              : item
+          )
+        );
+
       }
 
     } else {
 
-      this.items.push({
-        product: product,
-        quantity: 1
-      });
+      this.items.set([
+        ...currentItems,
+        {
+          product,
+          quantity: 1
+        }
+      ]);
 
     }
-
-    this.saveCart();
   }
 
   increaseQuantity(productId: number): void {
 
-    const item = this.items.find(
-      item => item.product.id === productId
-    );
+    const currentItems = this.items();
 
-    if (item && item.quantity < item.product.stock) {
-      item.quantity++;
-      this.saveCart();
-    }
+    this.items.set(
+      currentItems.map(item => {
+
+        if (
+          item.product.id === productId &&
+          item.quantity < item.product.stock
+        ) {
+          return {
+            ...item,
+            quantity: item.quantity + 1
+          };
+        }
+
+        return item;
+
+      })
+    );
   }
 
   decreaseQuantity(productId: number): void {
 
-    const item = this.items.find(
+    const currentItems = this.items();
+
+    const item = currentItems.find(
       item => item.product.id === productId
     );
 
@@ -90,51 +112,43 @@ export class CartService {
 
     if (item.quantity > 1) {
 
-      item.quantity--;
+      this.items.set(
+        currentItems.map(currentItem =>
+          currentItem.product.id === productId
+            ? {
+                ...currentItem,
+                quantity: currentItem.quantity - 1
+              }
+            : currentItem
+        )
+      );
 
     } else {
 
-      this.items = this.items.filter(
-        item => item.product.id !== productId
-      );
+      this.removeFromCart(productId);
 
     }
-
-    this.saveCart();
   }
 
   removeFromCart(productId: number): void {
 
-    this.items = this.items.filter(
-      item => item.product.id !== productId
+    this.items.set(
+      this.items().filter(
+        item => item.product.id !== productId
+      )
     );
 
-    this.saveCart();
   }
 
   getTotal(): number {
-
-    return this.items.reduce(
-      (total, item) =>
-        total + item.product.prix * item.quantity,
-      0
-    );
-
+    return this.total();
   }
 
   getItemCount(): number {
-
-    return this.items.reduce(
-      (count, item) => count + item.quantity,
-      0
-    );
-
+    return this.itemCount();
   }
 
   clearCart(): void {
-
-    this.items = [];
-
-    localStorage.removeItem(this.storageKey);
+    this.items.set([]);
   }
 }
