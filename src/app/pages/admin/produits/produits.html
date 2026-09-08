@@ -1,1 +1,502 @@
-<p>produits works!</p>
+<div class="products-page">
+
+  <!-- EN-TÊTE -->
+  <div class="page-header">
+
+    <div>
+      <span class="subtitle">GESTION</span>
+
+      <h2>Produits</h2>
+
+      <p>
+        Gérez les produits disponibles dans votre boutique agricole.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="add-button"
+      (click)="openAdd()"
+    >
+      + Ajouter un produit
+    </button>
+
+  </div>
+
+
+  <!-- MESSAGES -->
+
+  @if (successMessage()) {
+
+    <div class="success-message">
+      {{ successMessage() }}
+    </div>
+
+  }
+
+  @if (errorMessage()) {
+
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+
+  }
+
+
+  <!-- FORMULAIRE AJOUT / MODIFICATION -->
+
+  @if (showForm()) {
+
+    <section class="product-form-section">
+
+      <div class="form-header">
+
+        <div>
+          <span class="subtitle">
+            {{ isEdit() ? 'MODIFICATION' : 'NOUVEAU PRODUIT' }}
+          </span>
+
+          <h3>
+            {{ isEdit() ? 'Modifier le produit' : 'Ajouter un produit' }}
+          </h3>
+        </div>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeForm()"
+        >
+          ✕
+        </button>
+
+      </div>
+
+
+      <form
+        [formGroup]="productForm"
+        (ngSubmit)="saveProduct()"
+      >
+
+        <div class="form-grid">
+
+
+          <!-- NOM -->
+
+          <div class="form-group">
+
+            <label for="nom">
+              Nom du produit
+            </label>
+
+            <input
+              id="nom"
+              type="text"
+              formControlName="nom"
+              placeholder="Ex : Engrais NPK 15-15-15"
+            />
+
+            @if (
+              productForm.get('nom')?.invalid &&
+              productForm.get('nom')?.touched
+            ) {
+
+              <small class="field-error">
+                Le nom est obligatoire.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- CATÉGORIE -->
+
+          <div class="form-group">
+
+            <label for="categoryId">
+              Catégorie
+            </label>
+
+            <select
+              id="categoryId"
+              formControlName="categoryId"
+            >
+
+              <option [ngValue]="null">
+                Sélectionner une catégorie
+              </option>
+
+              @for (
+                category of categories();
+                track category.id
+              ) {
+
+                <option [ngValue]="category.id">
+                  {{ category.nom }}
+                </option>
+
+              }
+
+            </select>
+
+            @if (
+              productForm.get('categoryId')?.invalid &&
+              productForm.get('categoryId')?.touched
+            ) {
+
+              <small class="field-error">
+                Veuillez sélectionner une catégorie.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- PRIX -->
+
+          <div class="form-group">
+
+            <label for="prix">
+              Prix (FCFA)
+            </label>
+
+            <input
+              id="prix"
+              type="number"
+              min="0"
+              formControlName="prix"
+              placeholder="Ex : 14500"
+            />
+
+            @if (
+              productForm.get('prix')?.invalid &&
+              productForm.get('prix')?.touched
+            ) {
+
+              <small class="field-error">
+                Le prix doit être supérieur ou égal à 0.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- STOCK -->
+
+          <div class="form-group">
+
+            <label for="stock">
+              Stock
+            </label>
+
+            <input
+              id="stock"
+              type="number"
+              min="0"
+              formControlName="stock"
+              placeholder="Ex : 50"
+            />
+
+            @if (
+              productForm.get('stock')?.invalid &&
+              productForm.get('stock')?.touched
+            ) {
+
+              <small class="field-error">
+                Le stock doit être supérieur ou égal à 0.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- IMAGE -->
+
+          <div class="form-group">
+
+            <label for="image">
+              Image
+            </label>
+
+            <input
+              id="image"
+              type="text"
+              formControlName="image"
+              placeholder="Ex : engrais-npk-15-15-15.jpg"
+            />
+
+            <small class="field-help">
+              Indique le nom du fichier image présent dans
+              assets/images/products.
+            </small>
+
+          </div>
+
+
+          <!-- DISPONIBILITÉ -->
+
+          <div class="form-group checkbox-group">
+
+            <label class="checkbox-label">
+
+              <input
+                type="checkbox"
+                formControlName="disponible"
+              />
+
+              <span>
+                Produit disponible
+              </span>
+
+            </label>
+
+          </div>
+
+
+          <!-- DESCRIPTION -->
+
+          <div class="form-group full-width">
+
+            <label for="description">
+              Description
+            </label>
+
+            <textarea
+              id="description"
+              rows="5"
+              formControlName="description"
+              placeholder="Décrivez le produit..."
+            ></textarea>
+
+          </div>
+
+        </div>
+
+
+        <!-- ACTIONS FORMULAIRE -->
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="closeForm()"
+          >
+            Annuler
+          </button>
+
+          <button
+            type="submit"
+            class="save-button"
+          >
+            {{ isEdit() ? 'Enregistrer les modifications' : 'Ajouter le produit' }}
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+  }
+
+
+  <!-- LISTE DES PRODUITS -->
+
+  <section class="products-section">
+
+    <div class="section-title">
+
+      <h3>
+        Liste des produits
+      </h3>
+
+      <span>
+        {{ products().length }} produit(s)
+      </span>
+
+    </div>
+
+
+    @if (loading()) {
+
+      <div class="loading">
+        Chargement des produits...
+      </div>
+
+    } @else {
+
+      @if (products().length === 0) {
+
+        <div class="empty">
+
+          <p>
+            Aucun produit enregistré.
+          </p>
+
+          <button
+            type="button"
+            class="add-button"
+            (click)="openAdd()"
+          >
+            Ajouter un produit
+          </button>
+
+        </div>
+
+      } @else {
+
+        <div class="products-table">
+
+
+          <!-- EN-TÊTE TABLEAU -->
+
+          <div class="table-header">
+
+            <span>Produit</span>
+
+            <span>Catégorie</span>
+
+            <span>Prix</span>
+
+            <span>Stock</span>
+
+            <span>Disponibilité</span>
+
+            <span>Actions</span>
+
+          </div>
+
+
+          <!-- PRODUITS -->
+
+          @for (
+            product of products();
+            track product.id
+          ) {
+
+            <div class="table-row">
+
+
+              <!-- PRODUIT -->
+
+              <div class="product-info">
+
+                <div class="product-image">
+
+                  <img
+                    [src]="'assets/images/products/' + product.image"
+                    [alt]="product.nom"
+                  />
+
+                </div>
+
+                <div>
+
+                  <strong>
+                    {{ product.nom }}
+                  </strong>
+
+                  <small>
+                    ID : {{ product.id }}
+                  </small>
+
+                </div>
+
+              </div>
+
+
+              <!-- CATÉGORIE -->
+
+              <span class="category">
+                {{ product.category.nom || 'Sans catégorie' }}
+              </span>
+
+
+              <!-- PRIX -->
+
+              <strong class="price">
+
+                {{ product.prix | number:'1.0-0' }}
+
+                FCFA
+
+              </strong>
+
+
+              <!-- STOCK -->
+
+              <span
+                class="stock"
+
+                [class.out-of-stock]="
+                  product.stock === 0
+                "
+
+                [class.low-stock]="
+                  product.stock > 0 &&
+                  product.stock <= 5
+                "
+              >
+                {{ product.stock }}
+              </span>
+
+
+              <!-- DISPONIBILITÉ -->
+
+              @if (
+                product.disponible &&
+                product.stock > 0
+              ) {
+
+                <span class="available">
+                  Disponible
+                </span>
+
+              } @else {
+
+                <span class="unavailable">
+                  Indisponible
+                </span>
+
+              }
+
+
+              <!-- ACTIONS -->
+
+              <div class="actions">
+
+                <button
+                  type="button"
+                  class="edit-button"
+                  (click)="openEdit(product)"
+                >
+                  Modifier
+                </button>
+
+                <button
+                  type="button"
+                  class="delete-button"
+                  (click)="deleteProduct(product)"
+                >
+                  Supprimer
+                </button>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    }
+
+  </section>
+
+</div>
