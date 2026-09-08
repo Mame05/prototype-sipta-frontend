@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface OrderItemRequest {
   productId: number;
@@ -57,7 +58,7 @@ export interface OrderResponse {
 })
 export class OrderService {
 
-  private apiUrl = 'http://localhost:3000/orders';
+  private apiUrl =  `${environment.apiUrl}/orders`;
 
   constructor(
     private http: HttpClient

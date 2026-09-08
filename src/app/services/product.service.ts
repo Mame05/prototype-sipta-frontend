@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Product } from '../models/product';
+import { environment } from '../../environments/environment';
 
 export interface CreateProductRequest {
   nom: string;
@@ -24,7 +25,7 @@ export interface UploadImageResponse {
 })
 export class ProductService {
 
-  private apiUrl = 'http://localhost:3000/products';
+  private apiUrl = `${environment.apiUrl}/products`;
 
   constructor(
     private http: HttpClient
@@ -92,7 +93,7 @@ getImageUrl(image: string | null | undefined): string {
     return 'assets/images/products/default-product.jpg';
   }
 
-  return `http://localhost:3000/uploads/products/${image}`;
+  return `${environment.apiUrl}/uploads/products/${image}`;
 }
 
 }

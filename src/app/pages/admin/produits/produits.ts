@@ -326,7 +326,7 @@ export class Produits implements OnInit {
     if (product.image) {
 
       this.imagePreview.set(
-        `http://localhost:3000/uploads/products/${product.image}`
+        this.productService.getImageUrl(product.image)
       );
 
     } else {
