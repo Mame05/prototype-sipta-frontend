@@ -1,1 +1,531 @@
-<p>commandes works!</p>
+<div class="orders-page">
+
+  <!-- EN-TÊTE -->
+
+  <div class="page-header">
+
+    <div>
+      <span class="subtitle">GESTION</span>
+
+      <h2>Commandes</h2>
+
+      <p>
+        Consultez et gérez les commandes de votre boutique.
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- MESSAGES -->
+
+  @if (successMessage()) {
+
+    <div class="success-message">
+      {{ successMessage() }}
+    </div>
+
+  }
+
+  @if (errorMessage()) {
+
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+
+  }
+
+
+  <!-- LISTE -->
+
+  <section class="orders-section">
+
+    <div class="section-title">
+
+      <h3>
+        Liste des commandes
+      </h3>
+
+      <span>
+        {{ orders().length }} commande(s)
+      </span>
+
+    </div>
+
+
+    @if (loading()) {
+
+      <div class="loading">
+        Chargement des commandes...
+      </div>
+
+    } @else {
+
+      @if (orders().length === 0) {
+
+        <div class="empty">
+
+          <p>
+            Aucune commande enregistrée.
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="orders-table">
+
+
+          <!-- EN-TÊTE -->
+
+          <div class="table-header">
+
+            <span>Commande</span>
+
+            <span>Client</span>
+
+            <span>Téléphone</span>
+
+            <span>Articles</span>
+
+            <span>Total</span>
+
+            <span>Statut</span>
+
+            <span>Date</span>
+
+            <span>Action</span>
+
+          </div>
+
+
+          <!-- COMMANDES -->
+
+          @for (
+            order of orders();
+            track order.id
+          ) {
+
+            <div class="table-row">
+
+
+              <!-- NUMÉRO -->
+
+              <strong class="order-id">
+                #{{ order.id }}
+              </strong>
+
+
+              <!-- CLIENT -->
+
+              <div class="client-info">
+
+                <strong>
+                  {{ order.nomClient }}
+                </strong>
+
+                <small>
+                  {{ order.email }}
+                </small>
+
+              </div>
+
+
+              <!-- TÉLÉPHONE -->
+
+              <span class="phone">
+                {{ order.telephone }}
+              </span>
+
+
+              <!-- ARTICLES -->
+
+              <span class="items-count">
+                {{ getItemCount(order) }}
+              </span>
+
+
+              <!-- TOTAL -->
+
+              <strong class="total">
+                {{ order.total | number:'1.0-0' }}
+                FCFA
+              </strong>
+
+
+              <!-- STATUT -->
+
+              @if (order.statut === 'en_attente') {
+
+                <span class="status pending">
+                  En attente
+                </span>
+
+              } @else if (order.statut === 'confirmee') {
+
+                <span class="status confirmed">
+                  Confirmée
+                </span>
+
+              } @else if (order.statut === 'livree') {
+
+                <span class="status delivered">
+                  Livrée
+                </span>
+
+              } @else if (order.statut === 'annulee') {
+
+                <span class="status cancelled">
+                  Annulée
+                </span>
+
+              } @else {
+
+                <span class="status">
+                  {{ order.statut }}
+                </span>
+
+              }
+
+
+              <!-- DATE -->
+
+              <span class="date">
+                {{ order.createdAt | date:'dd/MM/yyyy' }}
+              </span>
+
+
+              <!-- ACTION -->
+
+              <div class="actions">
+
+                <button
+                  type="button"
+                  class="view-button"
+                  (click)="viewOrder(order)"
+                >
+                  Voir
+                </button>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    }
+
+  </section>
+
+<!-- =========================
+     MODALE DÉTAIL COMMANDE
+========================= -->
+
+@if (selectedOrder(); as order) {
+
+  <div
+    class="modal-overlay"
+    (click)="closeOrder()"
+  >
+
+    <div
+      class="order-modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- HEADER -->
+
+      <div class="modal-header">
+
+        <div>
+
+          <span class="modal-subtitle">
+            DÉTAIL DE LA COMMANDE
+          </span>
+
+          <h3>
+            Commande #{{ order.id }}
+          </h3>
+
+          <small class="order-date">
+            {{ order.createdAt | date:'dd/MM/yyyy à HH:mm' }}
+          </small>
+
+        </div>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeOrder()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- INFORMATIONS CLIENT -->
+
+      <div class="order-info-grid">
+
+        <div class="info-card">
+
+          <span class="info-label">
+            CLIENT
+          </span>
+
+          <strong>
+            {{ order.nomClient }}
+          </strong>
+
+          <small>
+            {{ order.email }}
+          </small>
+
+        </div>
+
+
+        <div class="info-card">
+
+          <span class="info-label">
+            TÉLÉPHONE
+          </span>
+
+          <strong>
+            {{ order.telephone }}
+          </strong>
+
+        </div>
+
+
+        <div class="info-card">
+
+          <span class="info-label">
+            ADRESSE DE LIVRAISON
+          </span>
+
+          <strong>
+            {{ order.adresse }}
+          </strong>
+
+        </div>
+
+
+
+    <div class="info-card status-card">
+
+  <span class="info-label">
+    STATUT
+  </span>
+
+  @if (order.statut === 'en_attente') {
+
+    <span class="status pending">
+      En attente
+    </span>
+
+  } @else if (order.statut === 'confirmee') {
+
+    <span class="status confirmed">
+      Confirmée
+    </span>
+
+  } @else if (order.statut === 'livree') {
+
+    <span class="status delivered">
+      Livrée
+    </span>
+
+  } @else if (order.statut === 'annulee') {
+
+    <span class="status cancelled">
+      Annulée
+    </span>
+
+  } @else {
+
+    <span class="status">
+      {{ order.statut }}
+    </span>
+
+  }
+
+
+  <div class="status-editor">
+
+    <select
+      [value]="selectedStatus()"
+      (change)="selectedStatus.set($any($event.target).value)"
+      [disabled]="updatingStatus()"
+    >
+
+      <option value="en_attente">
+        En attente
+      </option>
+
+      <option value="confirmee">
+        Confirmée
+      </option>
+
+      <option value="livree">
+        Livrée
+      </option>
+
+      <option value="annulee">
+        Annulée
+      </option>
+
+    </select>
+
+
+    <button
+      type="button"
+      class="status-button"
+      (click)="updateStatus()"
+      [disabled]="
+        updatingStatus() ||
+        selectedStatus() === order.statut
+      "
+    >
+
+      @if (updatingStatus()) {
+        Modification...
+      } @else {
+        Modifier
+      }
+
+    </button>
+
+  </div>
+
+</div>
+
+
+      </div>
+
+
+      <!-- PRODUITS -->
+
+      <div class="products-section">
+
+        <div class="products-title">
+
+          <h4>
+            Produits commandés
+          </h4>
+
+          <span>
+            {{ getItemCount(order) }} article(s)
+          </span>
+
+        </div>
+
+
+        <div class="products-table">
+
+          <!-- EN-TÊTE -->
+
+          <div class="products-header">
+
+            <span>Produit</span>
+
+            <span>Quantité</span>
+
+            <span>Prix unitaire</span>
+
+            <span>Sous-total</span>
+
+          </div>
+
+
+          <!-- PRODUITS -->
+
+          @for (
+            item of order.items;
+            track item.id
+          ) {
+
+            <div class="product-row">
+
+              <div class="product-name">
+
+                <strong>
+                  {{ item.product.nom }}
+                </strong>
+
+              </div>
+
+
+              <span class="product-quantity">
+                {{ item.quantity }}
+              </span>
+
+
+              <span class="unit-price">
+
+                {{ item.prixUnitaire | number:'1.0-0' }}
+
+                FCFA
+
+              </span>
+
+
+              <strong class="product-subtotal">
+
+                {{ item.sousTotal | number:'1.0-0' }}
+
+                FCFA
+
+              </strong>
+
+            </div>
+
+          }
+
+        </div>
+
+      </div>
+
+
+      <!-- TOTAL -->
+
+      <div class="order-total">
+
+        <span>
+          Total de la commande
+        </span>
+
+        <strong>
+          {{ order.total | number:'1.0-0' }}
+          FCFA
+        </strong>
+
+      </div>
+
+
+      <!-- FOOTER -->
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="close-modal-button"
+          (click)="closeOrder()"
+        >
+          Fermer
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}
+
+
+</div>
