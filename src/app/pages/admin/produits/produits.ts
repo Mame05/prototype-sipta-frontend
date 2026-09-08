@@ -37,14 +37,27 @@ export class Produits implements OnInit {
   successMessage = signal('');
   errorMessage = signal('');
 
+  // =========================
+  // IMAGE DU PRODUIT
+  // =========================
+
+  selectedFile: File | null = null;
+
+  imagePreview = signal<string | null>(null);
+
+  uploadingImage = signal(false);
+
   productForm: FormGroup;
 
   constructor(
-    private productService: ProductService,
+    //private productService: ProductService,
+    public productService: ProductService,
     private categoryService: CategoryService,
     private fb: FormBuilder
   ) {
+
     this.productForm = this.fb.group({
+
       nom: [
         '',
         [
@@ -94,43 +107,69 @@ export class Produits implements OnInit {
           Validators.required
         ]
       ]
+
     });
   }
 
   ngOnInit(): void {
+
     this.loadProducts();
+
     this.loadCategories();
+
   }
+
+
+  // =========================
+  // PRODUITS
+  // =========================
 
   loadProducts(): void {
 
     this.loading.set(true);
 
     this.productService.getProducts().subscribe({
+
       next: (data) => {
 
         this.products.set(data);
+
         this.loading.set(false);
 
-        console.log('Produits admin :', data);
+        console.log(
+          'Produits admin :',
+          data
+        );
+
       },
 
       error: (error) => {
 
-        console.error('Erreur produits :', error);
+        console.error(
+          'Erreur produits :',
+          error
+        );
 
         this.errorMessage.set(
           'Impossible de récupérer les produits.'
         );
 
         this.loading.set(false);
+
       }
+
     });
   }
+
+
+  // =========================
+  // CATÉGORIES
+  // =========================
 
   loadCategories(): void {
 
     this.categoryService.getCategories().subscribe({
+
       next: (data) => {
 
         this.categories.set(data);
@@ -139,6 +178,7 @@ export class Produits implements OnInit {
           'Catégories produits :',
           data
         );
+
       },
 
       error: (error) => {
@@ -151,16 +191,102 @@ export class Produits implements OnInit {
         this.errorMessage.set(
           'Impossible de récupérer les catégories.'
         );
+
       }
+
     });
   }
+
+
+  // =========================
+  // SÉLECTION IMAGE
+  // =========================
+
+  onFileSelected(event: Event): void {
+
+    const input =
+      event.target as HTMLInputElement;
+
+    if (
+      !input.files ||
+      input.files.length === 0
+    ) {
+
+      return;
+
+    }
+
+    const file =
+      input.files[0];
+
+
+    // Vérifier le type
+
+    if (!file.type.startsWith('image/')) {
+
+      this.errorMessage.set(
+        'Veuillez sélectionner une image.'
+      );
+
+      return;
+
+    }
+
+
+    // Vérifier la taille
+
+    if (file.size > 5 * 1024 * 1024) {
+
+      this.errorMessage.set(
+        'L’image ne doit pas dépasser 5 Mo.'
+      );
+
+      return;
+
+    }
+
+
+    // Stocker le fichier
+
+    this.selectedFile = file;
+
+    this.errorMessage.set('');
+
+
+    // Aperçu
+
+    const reader =
+      new FileReader();
+
+    reader.onload = () => {
+
+      this.imagePreview.set(
+        reader.result as string
+      );
+
+    };
+
+    reader.readAsDataURL(file);
+
+  }
+
+
+  // =========================
+  // AJOUT
+  // =========================
 
   openAdd(): void {
 
     this.isEdit.set(false);
+
     this.selectedId.set(null);
 
+    this.selectedFile = null;
+
+    this.imagePreview.set(null);
+
     this.productForm.reset({
+
       nom: '',
       description: '',
       prix: 0,
@@ -168,34 +294,78 @@ export class Produits implements OnInit {
       stock: 0,
       disponible: true,
       categoryId: null
+
     });
 
     this.successMessage.set('');
+
     this.errorMessage.set('');
 
     this.showForm.set(true);
+
   }
+
+
+  // =========================
+  // MODIFICATION
+  // =========================
 
   openEdit(product: Product): void {
 
     this.isEdit.set(true);
-    this.selectedId.set(product.id);
+
+    this.selectedId.set(
+      product.id
+    );
+
+    this.selectedFile = null;
+
+
+    // Image actuelle
+
+    if (product.image) {
+
+      this.imagePreview.set(
+        `http://localhost:3000/uploads/products/${product.image}`
+      );
+
+    } else {
+
+      this.imagePreview.set(null);
+
+    }
+
 
     this.productForm.patchValue({
+
       nom: product.nom,
+
       description: product.description,
+
       prix: product.prix,
+
       image: product.image,
+
       stock: product.stock,
+
       disponible: product.disponible,
+
       categoryId: product.categoryId
+
     });
 
     this.successMessage.set('');
+
     this.errorMessage.set('');
 
     this.showForm.set(true);
+
   }
+
+
+  // =========================
+  // FERMER FORMULAIRE
+  // =========================
 
   closeForm(): void {
 
@@ -205,9 +375,20 @@ export class Produits implements OnInit {
 
     this.selectedId.set(null);
 
+    this.selectedFile = null;
+
+    this.imagePreview.set(null);
+
     this.successMessage.set('');
+
     this.errorMessage.set('');
+
   }
+
+
+  // =========================
+  // SAUVEGARDER
+  // =========================
 
   saveProduct(): void {
 
@@ -216,99 +397,323 @@ export class Produits implements OnInit {
       this.productForm.markAllAsTouched();
 
       return;
+
     }
 
-    const data = {
-      nom: this.productForm.value.nom,
-      description: this.productForm.value.description || '',
-      prix: Number(this.productForm.value.prix),
-      image: this.productForm.value.image || '',
-      stock: Number(this.productForm.value.stock),
-      disponible: this.productForm.value.disponible,
-      categoryId: Number(this.productForm.value.categoryId)
-    };
 
     this.successMessage.set('');
+
     this.errorMessage.set('');
+
+
+    // =========================
+    // DONNÉES DU PRODUIT
+    // =========================
+
+    const buildProductData = (
+      imageName: string
+    ) => {
+
+      return {
+
+        nom:
+          this.productForm.value.nom,
+
+        description:
+          this.productForm.value.description || '',
+
+        prix:
+          Number(
+            this.productForm.value.prix
+          ),
+
+        image:
+          imageName,
+
+        stock:
+          Number(
+            this.productForm.value.stock
+          ),
+
+        disponible:
+          this.productForm.value.disponible,
+
+        categoryId:
+          Number(
+            this.productForm.value.categoryId
+          )
+
+      };
+
+    };
+
+
+    // =========================
+    // MODIFICATION
+    // =========================
 
     if (this.isEdit()) {
 
-      const id = this.selectedId();
+      const id =
+        this.selectedId();
 
-      if (!id) return;
 
-      this.productService
-        .updateProduct(id, data)
-        .subscribe({
+      if (!id) {
 
-          next: () => {
+        return;
 
-            this.successMessage.set(
-              'Produit modifié avec succès.'
-            );
+      }
 
-            this.showForm.set(false);
 
-            this.loadProducts();
-          },
+      // Si une nouvelle image est sélectionnée
+      if (this.selectedFile) {
 
-          error: (error) => {
+        this.uploadingImage.set(true);
 
-            console.error(
-              'Erreur modification produit :',
-              error
-            );
+        this.productService
+          .uploadImage(this.selectedFile)
+          .subscribe({
 
-            this.errorMessage.set(
-              error?.error?.message ||
-              'Impossible de modifier le produit.'
-            );
-          }
-        });
+            next: (response) => {
 
-    } else {
+              this.uploadingImage.set(false);
 
-      this.productService
-        .createProduct(data)
-        .subscribe({
+              const data =
+                buildProductData(
+                  response.image
+                );
 
-          next: () => {
+              this.updateProduct(
+                id,
+                data
+              );
 
-            this.successMessage.set(
-              'Produit ajouté avec succès.'
-            );
+            },
 
-            this.showForm.set(false);
+            error: (error) => {
 
-            this.loadProducts();
-          },
+              console.error(
+                'Erreur upload image :',
+                error
+              );
 
-          error: (error) => {
+              this.uploadingImage.set(false);
 
-            console.error(
-              'Erreur ajout produit :',
-              error
-            );
+              this.errorMessage.set(
+                'Impossible d’uploader l’image.'
+              );
 
-            this.errorMessage.set(
-              error?.error?.message ||
-              'Impossible d’ajouter le produit.'
-            );
-          }
-        });
+            }
+
+          });
+
+      } else {
+
+        // Garder l'image actuelle
+
+        const data =
+          buildProductData(
+            this.productForm.value.image || ''
+          );
+
+        this.updateProduct(
+          id,
+          data
+        );
+
+      }
+
+      return;
+
     }
+
+
+    // =========================
+    // AJOUT
+    // =========================
+
+    if (!this.selectedFile) {
+
+      this.errorMessage.set(
+        'Veuillez sélectionner une image.'
+      );
+
+      return;
+
+    }
+
+
+    this.uploadingImage.set(true);
+
+
+    // 1. Upload image
+
+    this.productService
+      .uploadImage(this.selectedFile)
+      .subscribe({
+
+        next: (response) => {
+
+          console.log(
+            'Image uploadée :',
+            response
+          );
+
+
+          this.uploadingImage.set(false);
+
+
+          // 2. Créer le produit
+
+          const data =
+            buildProductData(
+              response.image
+            );
+
+
+          this.productService
+            .createProduct(data)
+            .subscribe({
+
+              next: (product) => {
+
+                console.log(
+                  'Produit créé :',
+                  product
+                );
+
+                this.successMessage.set(
+                  'Produit ajouté avec succès.'
+                );
+
+                this.showForm.set(false);
+
+                this.selectedFile = null;
+
+                this.imagePreview.set(null);
+
+                this.loadProducts();
+
+              },
+
+              error: (error) => {
+
+                console.error(
+                  'Erreur ajout produit :',
+                  error
+                );
+
+                this.errorMessage.set(
+                  error?.error?.message ||
+                  'Impossible d’ajouter le produit.'
+                );
+
+              }
+
+            });
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Erreur upload image :',
+            error
+          );
+
+          this.uploadingImage.set(false);
+
+          this.errorMessage.set(
+            'Impossible d’uploader l’image.'
+          );
+
+        }
+
+      });
+
   }
 
-  deleteProduct(product: Product): void {
 
-    const confirmed = confirm(
-      `Voulez-vous vraiment supprimer le produit "${product.nom}" ?`
-    );
+  // =========================
+  // MODIFIER LE PRODUIT
+  // =========================
 
-    if (!confirmed) return;
+  updateProduct(
+    id: number,
+    data: any
+  ): void {
+
+    this.productService
+      .updateProduct(
+        id,
+        data
+      )
+      .subscribe({
+
+        next: (product) => {
+
+          console.log(
+            'Produit modifié :',
+            product
+          );
+
+          this.successMessage.set(
+            'Produit modifié avec succès.'
+          );
+
+          this.showForm.set(false);
+
+          this.selectedFile = null;
+
+          this.imagePreview.set(null);
+
+          this.loadProducts();
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Erreur modification produit :',
+            error
+          );
+
+          this.errorMessage.set(
+            error?.error?.message ||
+            'Impossible de modifier le produit.'
+          );
+
+        }
+
+      });
+
+  }
+
+
+  // =========================
+  // SUPPRIMER
+  // =========================
+
+  deleteProduct(
+    product: Product
+  ): void {
+
+    const confirmed =
+      confirm(
+        `Voulez-vous vraiment supprimer le produit "${product.nom}" ?`
+      );
+
+    if (!confirmed) {
+
+      return;
+
+    }
+
 
     this.successMessage.set('');
+
     this.errorMessage.set('');
+
 
     this.productService
       .deleteProduct(product.id)
@@ -321,6 +726,7 @@ export class Produits implements OnInit {
           );
 
           this.loadProducts();
+
         },
 
         error: (error) => {
@@ -334,7 +740,12 @@ export class Produits implements OnInit {
             error?.error?.message ||
             'Impossible de supprimer le produit.'
           );
+
         }
+
       });
+
   }
+
 }
+

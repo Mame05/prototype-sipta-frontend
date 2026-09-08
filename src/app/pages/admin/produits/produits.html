@@ -218,22 +218,38 @@
           <div class="form-group">
 
             <label for="image">
-              Image
+              Image du produit
             </label>
 
             <input
               id="image"
-              type="text"
-              formControlName="image"
-              placeholder="Ex : engrais-npk-15-15-15.jpg"
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
             />
 
             <small class="field-help">
-              Indique le nom du fichier image présent dans
-              assets/images/products.
+              Formats acceptés : JPG, JPEG, PNG, WEBP — 5 Mo maximum.
             </small>
 
+
+            <!-- APERÇU -->
+
+            @if (imagePreview()) {
+
+            <div class="image-preview">
+
+              <img
+                [src]="imagePreview()"
+                alt="Aperçu du produit"
+              />
+
+            </div>
+
+          }
+
           </div>
+
 
 
           <!-- DISPONIBILITÉ -->
@@ -291,9 +307,15 @@
           <button
             type="submit"
             class="save-button"
+            [disabled]="uploadingImage()"
           >
-            {{ isEdit() ? 'Enregistrer les modifications' : 'Ajouter le produit' }}
+            @if (uploadingImage()) {
+            Upload de l'image...
+            } @else {
+              {{ isEdit() ? 'Enregistrer les modifications' : 'Ajouter le produit' }}
+            }
           </button>
+
 
         </div>
 
@@ -388,7 +410,7 @@
                 <div class="product-image">
 
                   <img
-                    [src]="'assets/images/products/' + product.image"
+                    [src]="productService.getImageUrl(product.image)"
                     [alt]="product.nom"
                   />
 

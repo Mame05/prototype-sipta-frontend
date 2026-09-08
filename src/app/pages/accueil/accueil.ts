@@ -26,7 +26,8 @@ export class Accueil implements OnInit {
   loadingCategories = signal(true);
 
   constructor(
-    private productService: ProductService,
+    //private productService: ProductService,
+    public productService: ProductService,
     private categoryService: CategoryService
   ) {}
 

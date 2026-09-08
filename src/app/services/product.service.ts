@@ -14,6 +14,11 @@ export interface CreateProductRequest {
   categoryId: number;
 }
 
+export interface UploadImageResponse { 
+  message: string; 
+  image: string; 
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -68,4 +73,26 @@ export class ProductService {
       `${this.apiUrl}/${id}`
     );
   }
+
+  // ========================= // UPLOAD IMAGE // ========================= 
+  uploadImage( file: File 
+
+  ): Observable<UploadImageResponse> { 
+    const formData = new FormData(); 
+    formData.append('image', file); 
+    return this.http.post<UploadImageResponse>( 
+      `${this.apiUrl}/upload`, 
+      formData 
+    ); 
+  }
+// créer une URL d'image centralisée
+getImageUrl(image: string | null | undefined): string {
+
+  if (!image) {
+    return 'assets/images/products/default-product.jpg';
+  }
+
+  return `http://localhost:3000/uploads/products/${image}`;
+}
+
 }

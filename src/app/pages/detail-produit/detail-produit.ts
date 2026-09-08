@@ -25,7 +25,8 @@ export class DetailProduit implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService,
+    //private productService: ProductService,
+    public productService: ProductService,
     private cartService: CartService
   ) {}
 

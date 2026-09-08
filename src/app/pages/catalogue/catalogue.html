@@ -1,7 +1,4 @@
 <div class="catalogue">
-  <p style="background: yellow; padding: 20px;">
-  TEST CATALOGUE : {{ products().length }} produits
-</p>
 
   <div class="catalogue-header">
 
@@ -62,7 +59,7 @@
         <div class="product-image">
 
           <img
-            [src]="'assets/images/products/' + product.image"
+            [src]="productService.getImageUrl(product.image)"
             [alt]="product.nom"
           />
 
