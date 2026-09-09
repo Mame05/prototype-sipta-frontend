@@ -6,6 +6,7 @@ import {
   CartItem,
   CartService
 } from '../../services/cart.service';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-panier',
@@ -23,7 +24,8 @@ export class Panier implements OnInit {
   total = signal(0);
 
   constructor(
-    private cartService: CartService
+    private cartService: CartService,
+    public productService: ProductService
   ) {}
 
   ngOnInit(): void {

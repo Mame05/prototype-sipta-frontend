@@ -43,10 +43,10 @@
 
             <div class="item-image">
 
-              <img
-                [src]="'assets/images/products/' + item.product.image"
-                [alt]="item.product.nom"
-              >
+          <img
+            [src]="productService.getImageUrl(item.product.image)"
+            [alt]="item.product.nom"
+            >
 
             </div>
 
