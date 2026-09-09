@@ -92,6 +92,13 @@ getImageUrl(image: string | null | undefined): string {
   if (!image) {
     return 'assets/images/products/default-product.jpg';
   }
+  // Nouvelle image stockée sur Cloudinary
+   if ( 
+    image.startsWith('http://') || 
+    image.startsWith('https://') 
+  ) { 
+    return image; 
+  }
 
   return `${environment.apiUrl}/uploads/products/${image}`;
 }
