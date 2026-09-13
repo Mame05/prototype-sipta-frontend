@@ -20,7 +20,7 @@
       rgba(20, 55, 25, 0.70),
       rgba(20, 55, 25, 0.25)
     ),
-    url('/assets/images/hero-agriculture.jpg') center/cover no-repeat;
+    url('/assets/images/hero-agriculture.png') center/cover no-repeat;
 }
 
 .hero-content {
